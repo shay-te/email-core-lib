@@ -1,0 +1,9 @@
+defaults:
+  - core_lib
+  - email_core_lib
+
+core_lib_module: email_core_lib
+
+hydra:
+  run:
+    dir: .
