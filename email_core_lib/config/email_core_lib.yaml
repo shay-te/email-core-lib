@@ -1,4 +1,14 @@
 # @package _global_
 core_lib:
   email_core_lib:
-    data: {}
+    amqp:
+      queue_name: hello
+      url:
+        protocol: amqp
+        username: ${oc.env:AMQP_USERNAME}
+        password: ${oc.env:AMQP_PASSWORD}
+        host: ${oc.env:AMQP_HOST}
+        port: ${oc.env:AMQP_PORT}
+    client:
+      token: 31dca41561d7cc7f59ba7c129323485d-us5
+      server_prefix: us5
