@@ -10,5 +10,4 @@ core_lib:
         host: ${oc.env:AMQP_HOST}
         port: ${oc.env:AMQP_PORT}
     client:
-      token: 31dca41561d7cc7f59ba7c129323485d-us5
-      server_prefix: us5
+      token: Z2r0xfEsVAP4z4Z-iLA9MA

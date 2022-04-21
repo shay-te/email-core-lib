@@ -4,27 +4,38 @@ from mailchimp_transactional.api_client import ApiClientError
 
 
 class MailChimpClient:
-    def __init__(self, api_key: str, server: str):
+    def __init__(self, api_key: str):
         self.api_key = api_key
-        self.server = server
 
         self.mailchimp = MailchimpTransactional.Client(self.api_key)
-        # self.mailchimp.set_config({
-        #     "api_key": self.api_key,
-        #     "server": self.server,
-        # })
 
-    # def ping(self):
-    #     return self.mailchimp.ping.get()
-
-    def send(self):
+    def send(self, template_name, params):
+        print(params['email'])
+        message = {
+            "global_merge_vars": [
+                {
+                    "name": "email",
+                    "content": params['email']
+                },
+                {
+                    "name": "plan",
+                    "content": params['plan']
+                }
+            ],
+            "from_email": "noreply@objectivelove.com",
+            "subject": "Hello world",
+            "text": "Welcome to Mailchimp Transactional!",
+            "to": [
+                {
+                    "email": params['email'],
+                    "type": "to"
+                }
+            ]
+        }
         try:
             response = self.mailchimp.messages.send_template(
-                {"template_name": "register_complete", "template_content": [{}], "message": {}})
+                {"template_name": template_name, "template_content": [params], "message": message}
+            )
             print(response)
         except ApiClientError as error:
             print("An exception occurred: {}".format(error.text))
-
-
-if __name__ == '__main__':
-    MailChimpClient('31dca41561d7cc7f59ba7c129323485d-us5', 'us5').send()
