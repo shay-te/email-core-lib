@@ -61,8 +61,8 @@ app.config_from_object(cfg.core_lib.email_core_lib.amqp.url)
 app.autodiscover_tasks()
 
 app.send_task('task.send',
-                ['register_complete', {'email': 'john@example.com', 'plan': 'some plan'}],
-                queue='celery')
+                ['register_complete', {'email': 'john@example.com', 'plan': 'some plan'}]
+              )
 ```
 ## License
 Licenced under [MIT](https://github.com/shay-te/email-core-lib/blob/master/LICENSE_2022_4_19)
