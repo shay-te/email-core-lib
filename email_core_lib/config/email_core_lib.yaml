@@ -1,4 +1,13 @@
 # @package _global_
 core_lib:
   email_core_lib:
-    data: {}
+    amqp:
+      url:
+        protocol: amqp
+        username: ${oc.env:AMQP_USERNAME}
+        password: ${oc.env:AMQP_PASSWORD}
+        host: ${oc.env:AMQP_HOST}
+        port: ${oc.env:AMQP_PORT}
+    client:
+      _target_: email_core_lib.client.mailchimp_client.MailChimpClient
+      api_key: Z2r0xfEsVAP4z4Z-iLA9MA

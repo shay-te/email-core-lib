@@ -1,12 +1,68 @@
-[![PyPI](https://img.shields.io/pypi/v/core-lib)](https://pypi.org/project/core-lib/)
-![PyPI - License](https://img.shields.io/pypi/l/core-lib)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/core-lib)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/core-lib.svg)](https://pypistats.org/packages/core-lib)
-
 # EmailCoreLib
-CoreLib provides basic simple classes for creating a WEB Application as a Library using the Onion Architecture. [1](https://www.codeguru.com/csharp/csharp/cs_misc/designtechniques/understanding-onion-architecture.html) [2](https://www.google.com/search?sxsrf=ACYBGNT0NhYbUZLnDQbC9b6uPBqjZmjwgw%3A1579104811273&ei=KzofXuOfEO3IgwfngLPwAg&q=onion+Architecture&oq=onion+Architecture&gs_l=psy-ab.12...0.0..109691...0.0..0.0.0.......0......gws-wiz.oEYi3afxy_c&ved=0ahUKEwij4drq_4XnAhVt5OAKHWfADC4Q4dUDCAs)   
+`EmailCoreLib` uses [Celery](https://docs.celeryq.dev/en/stable/getting-started/introduction.html) and [MailChimp](https://mailchimp.com/) to receive data and send emails.
+It uses `Celery` to listen to a queue and receive data over it, and `MailChimp` is used to fire emails using their [Transactional Email](https://mailchimp.com/features/transactional-email/) service.
 
-Check the [website](https://core-lib.netlify.com/) for more information
+## Services
+- Send Emails using MailChimp
+- Starts Celery Worker to handle requests
 
+## Config 
+```yaml
+core_lib:
+  email_core_lib:
+    amqp:
+      url:
+        protocol: amqp
+        username: ${oc.env:AMQP_USERNAME}
+        password: ${oc.env:AMQP_PASSWORD}
+        host: ${oc.env:AMQP_HOST}
+        port: ${oc.env:AMQP_PORT}
+    client:
+      _target_: email_core_lib.client.mailchimp_client.MailChimpClient
+      api_key: your_mailchimp_transactional_api_key
+```
+
+## celery_main.py
+This is the main file that will start the `Celery` worker and initialize the `EmailCoreLib`. As soon as a task is 
+dispatched for `task.send` it will use the `MailchimpTransactional` client to send the email.
+
+## EmailCoreLib
+```python
+class EmailCoreLib(CoreLib):
+    def __init__(self, conf: DictConfig):
+        super().__init__()
+        self.config = conf
+        self.mailchimp = instantiate_config(self.config.core_lib.email_core_lib.client)
+```
+Uses `CoreLib`'s `instantiate_config` that will instantiate the `MailChimpClient` from the config yaml.
+
+## MailChimp Client
+This client will be initialized as soon as the `Celery` worker has started and the `EmailCoreLib` is initialized
+
+### Functions
+```python
+def send(self, template_name: str, params: dict):
+```
+
+`template_name` (*str*): Name of the saved template in your MailChimp Transactional account
+
+`params` (*dict*): A `dict` of variables as keys and their values that are saved in the template to be replaced.
+
+## Example
+```python
+import hydra
+from celery import Celery
+
+hydra.initialize(config_path='config_path', caller_stack_depth=1)
+cfg = hydra.compose('config.yaml')
+
+app = Celery()
+app.config_from_object(cfg.core_lib.email_core_lib.amqp.url)
+app.autodiscover_tasks()
+
+app.send_task('task.send',
+                ['register_complete', {'email': 'john@example.com', 'plan': 'some plan'}]
+              )
+```
 ## License
-Core-Lib in licenced under [MIT](https://github.com/shacoshe/core-lib/blob/master/LICENSE)
+Licenced under [MIT](https://github.com/shay-te/email-core-lib/blob/master/LICENSE_2022_4_19)
