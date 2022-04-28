@@ -2,7 +2,6 @@
 core_lib:
   email_core_lib:
     amqp:
-      queue_name: hello
       url:
         protocol: amqp
         username: ${oc.env:AMQP_USERNAME}

@@ -18,5 +18,4 @@ app.autodiscover_tasks()
 class Test(unittest.TestCase):
     def test(self):
         app.send_task('task.send',
-                      ['register_complete', {'email': 'shubham@objectivelove.com', 'plan': 'sfaefa'}],
-                      queue='celery')
+                      ['register_complete', {'email': 'shubham@objectivelove.com', 'plan': 'sfaefa'}])

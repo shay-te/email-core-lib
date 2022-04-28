@@ -1,4 +1,3 @@
-from mailchimp_marketing import Client
 import mailchimp_transactional as MailchimpTransactional
 from mailchimp_transactional.api_client import ApiClientError
 
@@ -6,11 +5,9 @@ from mailchimp_transactional.api_client import ApiClientError
 class MailChimpClient:
     def __init__(self, api_key: str):
         self.api_key = api_key
-
         self.mailchimp = MailchimpTransactional.Client(self.api_key)
 
-    def send(self, template_name, params):
-        print(params['email'])
+    def send(self, template_name: str, params: dict):
         message = {
             "global_merge_vars": [
                 {
