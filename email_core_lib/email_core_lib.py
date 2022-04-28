@@ -10,6 +10,5 @@ class EmailCoreLib(CoreLib):
         self.mailchimp = instantiate_config(self.config.core_lib.email_core_lib.client)
 
     def send(self, template_id, params):
-        print(self.mailchimp)
         self.mailchimp.send(template_id, params)
 

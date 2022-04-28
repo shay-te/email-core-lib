@@ -27,9 +27,8 @@ class MailChimpClient:
             ]
         }
         try:
-            response = self.mailchimp.messages.send_template(
+            self.mailchimp.messages.send_template(
                 {"template_name": template_name, "template_content": [params], "message": message}
             )
-            print(response)
         except ApiClientError as error:
             print("An exception occurred: {}".format(error.text))
