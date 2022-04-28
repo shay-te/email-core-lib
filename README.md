@@ -18,12 +18,23 @@ core_lib:
         host: ${oc.env:AMQP_HOST}
         port: ${oc.env:AMQP_PORT}
     client:
-      token: your_mailchimp_transactional_token
+      _target_: email_core_lib.client.mailchimp_client.MailChimpClient
+      api_key: your_mailchimp_transactional_api_key
 ```
 
 ## celery_main.py
 This is the main file that will start the `Celery` worker and initialize the `EmailCoreLib`. As soon as a task is 
 dispatched for `task.send` it will use the `MailchimpTransactional` client to send the email.
+
+## EmailCoreLib
+```python
+class EmailCoreLib(CoreLib):
+    def __init__(self, conf: DictConfig):
+        super().__init__()
+        self.config = conf
+        self.mailchimp = instantiate_config(self.config.core_lib.email_core_lib.client)
+```
+Uses `CoreLib`'s `instantiate_config` that will instantiate the `MailChimpClient` from the config yaml.
 
 ## MailChimp Client
 This client will be initialized as soon as the `Celery` worker has started and the `EmailCoreLib` is initialized

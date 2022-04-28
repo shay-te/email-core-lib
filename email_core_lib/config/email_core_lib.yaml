@@ -9,4 +9,5 @@ core_lib:
         host: ${oc.env:AMQP_HOST}
         port: ${oc.env:AMQP_PORT}
     client:
-      token: Z2r0xfEsVAP4z4Z-iLA9MA
+      _target_: email_core_lib.client.mailchimp_client.MailChimpClient
+      api_key: Z2r0xfEsVAP4z4Z-iLA9MA

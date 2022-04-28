@@ -19,9 +19,6 @@ class MailChimpClient:
                     "content": params['plan']
                 }
             ],
-            "from_email": "noreply@objectivelove.com",
-            "subject": "Hello world",
-            "text": "Welcome to Mailchimp Transactional!",
             "to": [
                 {
                     "email": params['email'],
