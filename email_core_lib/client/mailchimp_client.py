@@ -9,16 +9,6 @@ class MailChimpClient:
 
     def send(self, template_name: str, params: dict):
         message = {
-            "global_merge_vars": [
-                {
-                    "name": "email",
-                    "content": params['email']
-                },
-                {
-                    "name": "plan",
-                    "content": params['plan']
-                }
-            ],
             "to": [
                 {
                     "email": params['email'],

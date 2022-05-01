@@ -1,0 +1,6 @@
+# @package _global_
+defaults:
+  - _self_
+  - core_lib
+  - email_core_lib
+  - email_core_lib_override
