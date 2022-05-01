@@ -1,3 +1,5 @@
+import logging
+
 import hydra
 from celery import Celery
 

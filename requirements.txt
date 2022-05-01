@@ -1,7 +1,3 @@
-core-lib
 celery
-python-dotenv
-setuptools
-omegaconf
 eventlet
-hydra
+mailchimp-transactional

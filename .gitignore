@@ -28,3 +28,6 @@ dist/
 .env
 *.log
 
+
+outputs/
+dependencies_builds/
