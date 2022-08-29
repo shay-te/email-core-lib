@@ -6,8 +6,3 @@ defaults:
   - override hydra/job_logging: disabled
 
 core_lib_module: email_core_lib
-
-hydra:
-  output_subdir: null
-  run:
-    dir: .
