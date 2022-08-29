@@ -2,12 +2,5 @@ defaults:
   - _self_
   - core_lib
   - email_core_lib
-  - override hydra/hydra_logging: disabled
-  - override hydra/job_logging: disabled
 
 core_lib_module: email_core_lib
-
-hydra:
-  output_subdir: null
-  run:
-    dir: .
