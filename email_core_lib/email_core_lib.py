@@ -10,8 +10,8 @@ class EmailCoreLib(CoreLib):
         super().__init__()
         self.logger = logging.getLogger(self.__class__.__name__)
         self.config = conf
-        self.mailchimp = instantiate_config(self.config.core_lib.email_core_lib.client)
+        self.mail_client = instantiate_config(self.config.core_lib.email_core_lib.client)
 
     def send(self, template_id, params):
         self.logger.info(f'send email. template_id: {template_id}, params: {params}')
-        self.mailchimp.send(template_id, params)
+        self.mail_client.send(template_id, params)

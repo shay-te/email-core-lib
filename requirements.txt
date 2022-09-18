@@ -1,3 +1,5 @@
 celery
 eventlet
 mailchimp-transactional
+sib-api-v3-sdk
+
