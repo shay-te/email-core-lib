@@ -3,7 +3,7 @@ import logging
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 
-SENDER = {"name": "ObjectiveLove", "email": "noreply@objectivelove.com"}
+SENDER = {"name": "una", "email": "noreply@una.zone"}
 
 
 class SendInBlueClient:
@@ -28,5 +28,5 @@ class SendInBlueClient:
 
 
 if __name__ == '__main__':
-    s = SendInBlueClient('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')
+    s = SendInBlueClient('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')
     s.send(1, {"CODE": "123123", "subject": "Your code", "email": "shay.te@gmail.com"})
