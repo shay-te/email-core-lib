@@ -18,6 +18,7 @@ class SendInBlueClient:
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=[{"email": params['email']}], template_id=int(template_name), params=params, sender=SENDER)
         try:
             self.api_instance.send_transac_email(send_smtp_email)
+            return True
         except ApiException as e:
             print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
             self.logger.error(f'An exception occurred: {e}')
