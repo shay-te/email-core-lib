@@ -12,6 +12,6 @@ class EmailCoreLib(CoreLib):
         self.config = conf
         self.mail_client = instantiate_config(self.config.core_lib.email_core_lib.client)
 
-    def send(self, template_id, params):
-        self.logger.info(f'send email. template_id: {template_id}, params: {params}')
-        self.mail_client.send(template_id, params)
+    def send(self, template_id, params, sender_info):
+        self.logger.info(f'send email. template_id: {template_id}, params: {params}, sender_info: {sender_info}')
+        self.mail_client.send(template_id, params, sender_info)

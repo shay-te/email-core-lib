@@ -3,7 +3,7 @@ import logging
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 
-SENDER = {"name": "una", "email": "noreply@una.zone"}
+SENDER = {"name": "una", "email": "noreply@getuna.ai"}
 
 
 class SendInBlueClient:
@@ -14,8 +14,9 @@ class SendInBlueClient:
         configuration.api_key['api-key'] = api_key
         self.api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
-    def send(self, template_name: str, params: dict):
-        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=[{"email": params['email']}], template_id=int(template_name), params=params, sender=SENDER)
+    def send(self, template_name: str, params: dict, sender_info: dict = None):
+        sender = sender_info if sender_info else SENDER
+        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=[{"email": params['email']}], template_id=int(template_name), params=params, sender=sender)
         try:
             self.api_instance.send_transac_email(send_smtp_email)
         except ApiException as e:
