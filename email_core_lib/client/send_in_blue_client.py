@@ -33,7 +33,8 @@ class SendInBlueClient:
         return False
 
     def _notify_slack(self, message):
-        requests.post(self._slack_email_error_url, json={'text': message}, timeout=5)
+        if self._slack_email_error_url:
+            requests.post(self._slack_email_error_url, json={'text': message}, timeout=5)
 # if __name__ == '__main__':
 #     s = SendInBlueClient('CODE', '')
 #     s.send(1, {"CODE": "123123", "subject": "Your code", "email": "shay.te@gmail.com"})
