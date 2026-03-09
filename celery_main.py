@@ -11,8 +11,8 @@ def main(cfg):
     app = Celery('task', broker=build_url(**cfg.core_lib.email_core_lib.amqp.url))
 
     @app.task()
-    def send(template_id, params, sender_info):
-        email_core_lib.send(template_id, params, sender_info)
+    def send(template_id, params, sender_info, tags):
+        email_core_lib.send(template_id, params, sender_info, tags)
 
     argv = [
         'worker',
