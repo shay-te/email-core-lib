@@ -16,9 +16,15 @@ class SendInBlueClient:
         configuration.api_key['api-key'] = api_key
         self.api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
-    def send(self, template_name: str, params: dict, sender_info: dict = None):
+    def send(self, template_name: str, params: dict, sender_info: dict = None, tags: list = None):
         sender = sender_info if sender_info else SENDER
-        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=[{"email": params['email']}], template_id=int(template_name), params=params, sender=sender)
+        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+            to=[{"email": params['email']}],
+            template_id=int(template_name),
+            params=params,
+            sender=sender,
+            tags=tags
+        )
         try:
             self.api_instance.send_transac_email(send_smtp_email)
             return True
@@ -35,6 +41,7 @@ class SendInBlueClient:
     def _notify_slack(self, message):
         if self._slack_email_error_url:
             requests.post(self._slack_email_error_url, json={'text': message}, timeout=5)
+
 # if __name__ == '__main__':
 #     s = SendInBlueClient('CODE', '')
 #     s.send(1, {"CODE": "123123", "subject": "Your code", "email": "shay.te@gmail.com"})
