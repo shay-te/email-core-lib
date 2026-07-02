@@ -16,14 +16,19 @@ class SendInBlueClient:
         configuration.api_key['api-key'] = api_key
         self.api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
-    def send(self, template_name: str, params: dict, sender_info: dict = None, tags: list = None):
+    def send(self, template_name: str, params: dict, sender_info: dict = None, tags: list = None,
+             attachments: list = None):
         sender = sender_info if sender_info else SENDER
+        # Brevo attaches each {name, url} by fetching the url at send time — we
+        # pass short-lived presigned Library links, so the recipient gets real
+        # file attachments.
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
             to=[{"email": params['email']}],
             template_id=int(template_name),
             params=params,
             sender=sender,
-            tags=tags
+            tags=tags,
+            attachment=attachments or None
         )
         try:
             self.api_instance.send_transac_email(send_smtp_email)
