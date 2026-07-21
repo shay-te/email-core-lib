@@ -1,27 +1,21 @@
 """Normalize email attachments into Brevo's `SendSmtpEmail.attachment` shape.
 
-Brevo (Sendinblue) accepts each attachment as either a remote URL or inline
-base64 content, both paired with a display file name:
+Brevo (Sendinblue) accepts each attachment as a remote URL paired with a
+display file name:
     {"url": "https://…/file.pdf", "name": "file.pdf"}
-    {"content": "<base64>", "name": "file.pdf"}
 
 Workflow email attachments arrive as `{"name", "url"}` (a Library file resolved
-to a presigned download URL), so the URL form is the common path. Kept as a
-pure helper (no Brevo SDK import) so it is unit-testable without the SDK.
+to a presigned download URL). Kept as a pure helper (no Brevo SDK import) so it
+is unit-testable without the SDK.
 """
 
 
 def build_brevo_attachment(attachment: dict) -> dict:
     name = attachment['name']
     url = attachment.get('url')
-    content = attachment.get('content')
-    if url:
-        return {'url': url, 'name': name}
-    if content:
-        return {'content': content, 'name': name}
-    raise ValueError(
-        f'attachment {name!r} requires either a url or base64 content'
-    )
+    if not url:
+        raise ValueError(f'attachment {name!r} requires a url')
+    return {'url': url, 'name': name}
 
 
 def build_brevo_attachments(attachments) -> list:

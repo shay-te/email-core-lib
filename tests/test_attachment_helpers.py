@@ -14,17 +14,12 @@ class TestAttachmentHelpers(unittest.TestCase):
             {'url': 'https://files/contract.pdf', 'name': 'contract.pdf'},
         )
 
-    def test_content_attachment_maps_to_brevo_content_shape(self):
-        self.assertEqual(
-            build_brevo_attachment({'name': 'a.txt', 'content': 'YWJj'}),
-            {'content': 'YWJj', 'name': 'a.txt'},
-        )
+    def test_content_only_attachment_raises(self):
+        # base64 content is not supported — only url attachments.
+        with self.assertRaises(ValueError):
+            build_brevo_attachment({'name': 'a.txt', 'content': 'YWJj'})
 
-    def test_url_wins_when_both_present(self):
-        result = build_brevo_attachment({'name': 'a.pdf', 'url': 'https://f/a.pdf', 'content': 'YWJj'})
-        self.assertEqual(result, {'url': 'https://f/a.pdf', 'name': 'a.pdf'})
-
-    def test_attachment_without_url_or_content_raises(self):
+    def test_attachment_without_url_raises(self):
         with self.assertRaises(ValueError):
             build_brevo_attachment({'name': 'a.pdf'})
 
