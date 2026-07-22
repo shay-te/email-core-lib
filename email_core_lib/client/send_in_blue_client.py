@@ -4,6 +4,8 @@ import requests
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 
+from email_core_lib.client.attachment_helpers import build_brevo_attachments
+
 SENDER = {"name": "una", "email": "noreply@getuna.ai"}
 
 
@@ -16,14 +18,22 @@ class SendInBlueClient:
         configuration.api_key['api-key'] = api_key
         self.api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
-    def send(self, template_name: str, params: dict, sender_info: dict = None, tags: list = None):
+    def send(self, template_name: str, params: dict, sender_info: dict = None, tags: list = None,
+             attachments: list = None):
         sender = sender_info if sender_info else SENDER
+        # Attachments ride inside `params` on the workflow path (the Celery task
+        # only forwards template_id/params/sender/tags), so fall back to it when
+        # no explicit list is given. Pop so it is never sent as a template var.
+        raw_attachments = attachments if attachments is not None else params.get('attachments')
+        params.pop('attachments', None)
+        attachment = build_brevo_attachments(raw_attachments)
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
             to=[{"email": params['email']}],
             template_id=int(template_name),
             params=params,
             sender=sender,
-            tags=tags
+            tags=tags,
+            attachment=attachment
         )
         try:
             self.api_instance.send_transac_email(send_smtp_email)
